@@ -16,7 +16,7 @@ Gap analysis: GAPCLOSE.md (form schemas, submit targets, blocked families).
 One-liner (uvx, recommended) — no clone needed:
 
 ```bash
-uvx --from digii-campus-mcp digii-campus
+uvx digii-campus-mcp
 ```
 
 Create a `.env` in your working directory (or export in your shell) as
