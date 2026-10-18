@@ -25,19 +25,27 @@ TIMEOUT = 20.0
 
 
 def _load_dotenv() -> None:
-    """Minimal .env loader: fills os.environ only for keys not already set."""
-    here = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(here, ".env")
-    if not os.path.isfile(path):
-        return
-    with open(path, encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, _, value = line.partition("=")
-            key, value = key.strip(), value.strip().strip("'\"")
-            os.environ.setdefault(key, value)
+    """Minimal .env loader: fills os.environ only for keys not already set.
+
+    Looks beside this file first (source checkout), then in the current
+    working directory (installed `digii-campus` command), so `uvx`/`pipx`
+    users can keep a project-local .env.
+    """
+    candidates = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"),
+        os.path.join(os.getcwd(), ".env"),
+    ]
+    for path in candidates:
+        if not os.path.isfile(path):
+            continue
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                key, value = key.strip(), value.strip().strip("'\"")
+                os.environ.setdefault(key, value)
 
 
 _load_dotenv()
@@ -73,14 +81,19 @@ def _decode_jwt_payload(token: str) -> dict:
 
 
 def _get(path: str, params: dict | None = None) -> httpx.Response:
-    """GET a JSON endpoint with the Auth-Token header. Raises TOKEN_EXPIRED on 401."""
+    """GET a JSON endpoint with the Auth-Token header. Raises TOKEN_EXPIRED on 401.
+
+    Security: redirects are NOT followed. The Auth-Token bearer header must
+    never travel off BASE_URL, and httpx retains custom headers across
+    redirects, so any 3xx here is surfaced as an error instead.
+    """
     headers = {"Auth-Token": TOKEN, "Accept": "application/json"}
     resp = httpx.get(
         BASE_URL + path,
         params=params,
         headers=headers,
         timeout=TIMEOUT,
-        follow_redirects=True,
+        follow_redirects=False,
     )
     if resp.status_code in (401, 403):
         raise ToolError(_token_expired_msg(resp.status_code))
@@ -608,7 +621,7 @@ def _post_json(path: str, payload: dict) -> httpx.Response:
         json=payload,
         headers=headers,
         timeout=TIMEOUT,
-        follow_redirects=True,
+        follow_redirects=False,
     )
     if resp.status_code in (401, 403):
         raise ToolError(_token_expired_msg(resp.status_code))
@@ -1182,5 +1195,10 @@ def create_outpass(service_id: int = 18, out_date: str = "", out_time: str = "",
     return json.dumps(out, indent=1)
 
 
+def main() -> None:
+    """Entry point for the `digii-campus` console script (stdio transport)."""
+    mcp.run()
+
+
 if __name__ == "__main__":
-    mcp.run()  # stdio transport
+    main()  # stdio transport

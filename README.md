@@ -73,6 +73,28 @@ endpoints (`PUT /rest/service/readNotificationObjects`, legacy
 `POST /rest/feed/seenByUkid/v2`) are intentionally never called so unread
 counts stay authoritative; no other tool writes anything.
 
+### Mandatory client setup: per-tool approval (read this)
+
+Eighteen tools in this server pour untrusted third-party text (feed posts,
+assignment descriptions, notification content, help-desk comments) into your
+agent's context. A crafted post could instruct the agent to file an outpass,
+and the agent would supply `confirmed=true` itself. The server's confirmation
+gate stops accidents; it cannot stop a manipulated agent, because the agent
+is the party being asked to confirm — and a fraudulent outpass lands on a
+real warden's desk under the student's name.
+
+So: configure your MCP client to **auto-approve the 18 read tools and always
+require human approval for `create_outpass`** (`preview_outpass` may stay
+auto-approved; it performs no mutation). This is mandatory setup, not
+optional hardening. Examples:
+
+- Claude Code / OpenCode: add `create_outpass` to the ask/approval list
+  (e.g. OpenCode `permission` rules), leave the rest allowed.
+- Claude Desktop: set tools to ask-first where supported, or confirm the
+  preview output in chat before any `create_outpass` call.
+- Any client: never grant blanket write approval to this server; the only
+  write it contains is the one that notifies a human authority.
+
 Run locally for a smoke test:
 
 ```bash

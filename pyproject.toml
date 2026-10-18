@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digii-campus-mcp"
+version = "0.1.0"
+description = "MCP server wrapping the Digii/CollPoll student portal REST API (any college)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Sheikh Abdullah" }]
+keywords = ["mcp", "digii", "collpoll", "model-context-protocol"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "fastmcp>=2.0",
+  "httpx>=0.27",
+]
+
+[project.scripts]
+digii-campus = "server:main"
+
+[project.urls]
+Homepage = "https://github.com/Sheikh162/digii-campus-mcp"
+Issues = "https://github.com/Sheikh162/digii-campus-mcp/issues"
+
+[tool.setuptools]
+py-modules = ["server"]
