@@ -1,0 +1,27 @@
+# Secrets — never commit
+.env
+.userinfo.json
+
+# Build/agent logs
+build-*.json
+build-*.log
+census-*.json
+census-*.log
+gapcrawl-*.json
+gapcrawl-*.log
+build-v2-*.json
+build-v2-*.log
+build-v3-*.json
+build-v3-*.log
+
+# Scratch / tooling
+__pycache__/
+*.pyc
+.playwright-mcp/
+node_modules/
+.agent-browser/
+venv/
+.venv/
+
+# Local-only raw captures (may contain personal prefill values)
+gapclose_raw.json
