@@ -22,6 +22,10 @@ node_modules/
 .agent-browser/
 venv/
 .venv/
+# Build artifacts (rebuilt by CI on every tag)
+build/
+dist/
+*.egg-info/
 
 # Local-only raw captures (may contain personal prefill values)
 gapclose_raw.json

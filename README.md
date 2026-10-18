@@ -13,6 +13,18 @@ Gap analysis: GAPCLOSE.md (form schemas, submit targets, blocked families).
 
 ## Setup
 
+One-liner (uvx, recommended) — no clone needed:
+
+```bash
+uvx --from digii-campus-mcp digii-campus
+```
+
+Create a `.env` in your working directory (or export in your shell) as
+below, and point your MCP client at the command above instead of a venv
+path.
+
+From source:
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
