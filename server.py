@@ -582,7 +582,12 @@ def get_class_assessments(class_id: int) -> str:
 @mcp.tool
 def get_feed(n: int = 5) -> str:
     """Latest posts from the campus feed: text, author, timestamp (and booth,
-    category)."""
+    category).
+
+    Use for campus announcements and community posts. For personal alerts
+    addressed to the student use get_notifications; for coursework use
+    get_assignments.
+    """
     n = max(1, min(int(n), 25))
     data = _json("/api/feedV3", params={"number": n, "start": 0}) or {}
     posts = data.get("res") or []
@@ -778,6 +783,10 @@ def get_passes(page: int = 1, per_page: int = 10, include_fallback: bool = True)
     """My-passes console: own pass requests (paged) + hostel identity, plus, when
     the pass console has no rows, the help-centre outpass requests as fallback.
 
+    Use this for a quick pass/outpass status check. For the complete
+    help-desk record (service catalogue, per-request form values, comments)
+    use get_help_requests instead.
+
     Args:
         page: 1-based page in the pass console.
         per_page: Rows per page (max 25).
@@ -829,6 +838,9 @@ def get_help_requests(request_id: int | None = None, page: int = 1,
                       per_page: int = 10, include_services: bool = True) -> str:
     """Campus Help Centre: requestable services + my help requests (paged);
     with `request_id`, full detail for ONE request incl. form values and comments.
+
+    Use this for the complete help-desk record. For a quick pass/outpass
+    status check use get_passes instead.
 
     Args:
         request_id: A `requestId` (from this tool or get_passes) to fetch detail

@@ -59,16 +59,16 @@ Application, then Local Storage, and copy the `token` field inside `userInfo`
 | `get_calendar_events()` | Institutional calendar events (holidays, fests). |
 | `get_profile()` | Compact identity card (ukid, user type, tenant, pending stats). |
 | `get_drive_usage()` | Human-readable drive used, free, allocated. |
-| `get_feed(n=5)` | Latest campus feed posts: text, author, timestamp. |
+| `get_feed(n=5)` | Latest campus feed posts: text, author, timestamp. Announcements and community posts; for personal alerts use `get_notifications`, for coursework `get_assignments`. |
 | `get_assignments(class_id=None, page=1, per_page=10)` | Assignments per class (all classes when `class_id` omitted): draft, upcoming and previous counts, due dates, submission state. |
 | `get_assignment(class_id, assignment_id)` | Full assignment detail: description, dates, submission state, grade fields, mark limits, submissions, resource file URLs. |
 | `get_results(term_id=None)` | Without `term_id`: overall CGPA and percentage rollup plus all exam terms with declaration state. With `term_id` (the `examId`): per-course grades and marks for that term. |
 | `get_class_assessments(class_id)` | Gradebook snapshot for a class: student identity plus published assessment component results and grades (empty until declared). |
 | `get_mentor()` | Assigned faculty mentor: name, email, phone, department. |
 | `get_hostel_summary(days=14)` | Allotment (hostel, room, status, dates) plus hostel attendance roll for the last N days plus profile hostel data. |
-| `get_passes(page=1, per_page=10, include_fallback=true)` | My-passes console rows; when the console is empty, outpass history via the Campus Help Centre requests list as fallback. |
+| `get_passes(page=1, per_page=10, include_fallback=true)` | Quick pass/outpass status check; when the console is empty, outpass history via the Campus Help Centre requests list as fallback. For the full record use `get_help_requests`. |
 | `get_notifications(limit=10)` | List-only notification bell: unread count plus newest rows. **Never marks anything read** (see note). |
-| `get_help_requests(request_id=None, page=1, per_page=10, include_services=true)` | Help-centre service catalogue plus paged request list; with `request_id`, full detail including form values and comments. |
+| `get_help_requests(request_id=None, page=1, per_page=10, include_services=true)` | Complete help-desk record: service catalogue plus paged request list; with `request_id`, full detail including form values and comments. For a quick status check use `get_passes`. |
 | `get_venue_bookings(period="TODAY", page=1, size=12)` | Own venue bookings in the period window (TODAY, TOMORROW, NEXT_7_DAYS, PAST) plus student-bookable venue types. |
 | `preview_outpass(service_id, out_date, out_time, return_date, return_time, description)` | **No-mutation preview**: builds the exact JSON that would be POSTed to `/api/chc/request/v2` (live form schema, values filled) with sanity checks and a human summary. |
 | `create_outpass(... plus confirmed)` | **THE ONLY WRITE IN THIS SERVER.** Files the outpass via `POST /api/chc/request/v2` — refused with `CONFIRMATION_REQUIRED` (zero network activity) unless `confirmed` is literally `true`. Run `preview_outpass` with the same params first. Duplicate (HTTP 409) is surfaced as `DUPLICATE_REQUEST`. |

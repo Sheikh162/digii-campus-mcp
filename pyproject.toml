@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digii-campus-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP server wrapping the Digii/CollPoll student portal REST API (any college)"
 readme = "README.md"
 requires-python = ">=3.10"
