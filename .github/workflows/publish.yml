@@ -1,0 +1,26 @@
+name: publish
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build
+      - name: Check artifacts for secrets
+        run: |
+          ! tar tzf dist/*.tar.gz | grep -Ei '^\.|env$|userinfo' || (echo "SECRET FILENAME IN SDIST" && exit 1)
+          mkdir -p /tmp/artcheck && tar xzf dist/*.tar.gz -C /tmp/artcheck
+          ! grep -r 'eyJhbG' /tmp/artcheck || (echo "JWT IN ARTIFACT" && exit 1)
+          echo "artifact secret scan clean"
+      - uses: pypa/gh-action-pypi-publish@release/v1
